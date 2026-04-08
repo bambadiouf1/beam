@@ -757,6 +757,56 @@ public class DataflowPipelineTranslatorTest implements Serializable {
     assertEquals(diskSizeGb, job.getEnvironment().getWorkerPools().get(0).getDiskSizeGb());
   }
 
+  @Test
+  public void testDiskProvisioningTranslation() throws IOException {
+    DataflowPipelineOptions options = buildPipelineOptions();
+    options.setDiskProvisionedIops(Long.valueOf(7000));
+    options.setDiskProvisionedThroughputMibps(Long.valueOf(250));
+
+    Pipeline p = buildPipeline(options);
+    p.traverseTopologically(new RecordingPipelineVisitor());
+    SdkComponents sdkComponents = createSdkComponents(options);
+    RunnerApi.Pipeline pipelineProto = PipelineTranslation.toProto(p, sdkComponents, true);
+    Job job =
+        DataflowPipelineTranslator.fromOptions(options)
+            .translate(
+                p,
+                pipelineProto,
+                sdkComponents,
+                DataflowRunner.fromOptions(options),
+                Collections.emptyList())
+            .getJob();
+
+    assertEquals(1, job.getEnvironment().getWorkerPools().size());
+    WorkerPool pool = job.getEnvironment().getWorkerPools().get(0);
+    assertEquals(Long.valueOf(7000), pool.getDiskProvisionedIops());
+    assertEquals(Long.valueOf(250), pool.getDiskProvisionedThroughputMibps());
+  }
+
+  @Test
+  public void testDiskProvisioningTranslationDefaults() throws IOException {
+    DataflowPipelineOptions options = buildPipelineOptions();
+
+    Pipeline p = buildPipeline(options);
+    p.traverseTopologically(new RecordingPipelineVisitor());
+    SdkComponents sdkComponents = createSdkComponents(options);
+    RunnerApi.Pipeline pipelineProto = PipelineTranslation.toProto(p, sdkComponents, true);
+    Job job =
+        DataflowPipelineTranslator.fromOptions(options)
+            .translate(
+                p,
+                pipelineProto,
+                sdkComponents,
+                DataflowRunner.fromOptions(options),
+                Collections.emptyList())
+            .getJob();
+
+    assertEquals(1, job.getEnvironment().getWorkerPools().size());
+    WorkerPool pool = job.getEnvironment().getWorkerPools().get(0);
+    assertNull(pool.getDiskProvisionedIops());
+    assertNull(pool.getDiskProvisionedThroughputMibps());
+  }
+
   /** A composite transform that returns an output that is unrelated to the input. */
   private static class UnrelatedOutputCreator
       extends PTransform<PCollection<Integer>, PCollection<Integer>> {
