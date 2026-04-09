@@ -492,7 +492,7 @@ if __name__ == '__main__':
               'google-cloud-core>=2.0.0,<3',
               'google-cloud-bigtable>=2.19.0,<3',
               'google-cloud-build>=3.35.0,<4',
-              'google-cloud-spanner>=3.0.0,<4',
+              'google-cloud-spanner>=3.63.0,<4',
               # GCP Packages required by ML functionality
               'google-cloud-dlp>=3.0.0,<4',
               'google-cloud-kms>=3.0.0,<4',
@@ -501,7 +501,7 @@ if __name__ == '__main__':
               'google-cloud-videointelligence>=2.0,<3',
               'google-cloud-vision>=2,<4',
               'google-cloud-recommendations-ai>=0.1.0,<0.11.0',
-              'google-cloud-aiplatform>=1.26.0, < 2.0',
+              'google-cloud-aiplatform>=1.143.0,<2.0',
               'cloud-sql-python-connector>=1.18.2,<2.0.0',
               'python-tds>=1.16.1',
               'pg8000>=1.31.5',
