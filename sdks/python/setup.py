@@ -150,7 +150,8 @@ if sys.platform == 'win32' and sys.maxsize <= 2**32:
   pyarrow_dependency = ['']
 else:
   pyarrow_dependency = [
-      'pyarrow>=6.0.1,<24.0.0',
+      'pyarrow>=14.0.1,<24.0.0; python_version >= "3.12"',
+      'pyarrow>=6.0.1,<24.0.0; python_version < "3.12"',
       # NOTE(https://github.com/apache/beam/issues/29392): We can remove this
       # once Beam increases the pyarrow lower bound to a version that fixes CVE.
       # (lower bound >= 14.0.1)
@@ -168,7 +169,7 @@ dataframe_dependency = [
 milvus_dependency = ['pymilvus>=2.5.10,<3.0.0']
 
 ml_base = [
-    'embeddings>=0.0.4', # 0.0.3 crashes setuptools
+    'embeddings>=0.0.4',  # 0.0.3 crashes setuptools
     'google-adk',
     'onnxruntime',
     'langchain',
@@ -547,7 +548,7 @@ if __name__ == '__main__':
               # tensorflow-transform requires dill, but doesn't set dill as a
               # hard requirement in setup.py.
               'dill',  # match tft extra.
-              'tensorflow_transform>=1.14.0,<1.15.0',
+              'tensorflow_transform>=1.14.0,<1.18.0; python_version < "3.12"',
               # TFT->TFX-BSL require pandas 1.x, which is not compatible
               # with numpy 2.x
               'numpy<2',
@@ -617,7 +618,7 @@ if __name__ == '__main__':
           ],
           'redis': ['redis>=5.0.0,<6'],
           'tft': [
-              'tensorflow_transform>=1.14.0,<1.15.0',
+              'tensorflow_transform>=1.14.0,<1.18.0; python_version < "3.12"',
               # TFT->TFX-BSL require pandas 1.x, which is not compatible
               # with numpy 2.x
               'numpy<2',
